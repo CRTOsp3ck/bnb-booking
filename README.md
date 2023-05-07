@@ -1,18 +1,18 @@
-BED & BREAKFAST BOOKING APP
+# BED & BREAKFAST BOOKING APP
 
-PLANNING
+# PLANNING
 1 Deciding what to build
 2 Project scope
 3 Key functionalities
 
-WHAT TO BUILD
+# WHAT TO BUILD
 - Booking & reservation app
 - A Bed & Breakfast with 2 rooms
 
-PROJECT SCOPE
+# PROJECT SCOPE
 - 
 
-KEY FUNCTIONALITIES
+# KEY FUNCTIONALITIES
 - Showcase the property
 - Allow for booking a room for one or more nights
 - Check a room's availability
@@ -26,7 +26,7 @@ KEY FUNCTIONALITIES
 
 
 
-NOTES
+# NOTES
 Packages used in Hello World app (for deep diving):-
 
 1 Router - Chi
