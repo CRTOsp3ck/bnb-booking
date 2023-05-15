@@ -1,9 +1,9 @@
 package main
 
 import (
-	"bnb-booking/pkg/config"
-	"bnb-booking/pkg/handlers"
-	"bnb-booking/pkg/render"
+	"bnb-booking/internal/config"
+	"bnb-booking/internal/handlers"
+	"bnb-booking/internal/render"
 	"fmt"
 	"log"
 	"net/http"
