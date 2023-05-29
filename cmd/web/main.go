@@ -3,13 +3,14 @@ package main
 import (
 	"bnb-booking/internal/config"
 	"bnb-booking/internal/handlers"
+	"bnb-booking/internal/models"
 	"bnb-booking/internal/render"
+	"encoding/gob"
 	"fmt"
+	"github.com/alexedwards/scs/v2"
 	"log"
 	"net/http"
 	"time"
-
-	"github.com/alexedwards/scs/v2"
 )
 
 const portNumber = ":8080"
@@ -19,6 +20,25 @@ var session *scs.SessionManager
 
 // app main function call
 func main() {
+	err := run()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("Starting application on port %s\n", portNumber)
+
+	srv := &http.Server{
+		Addr:    portNumber,
+		Handler: routes(&app),
+	}
+
+	err = srv.ListenAndServe()
+	log.Fatal(err)
+}
+
+func run() error {
+	// what am i going to store in the session
+	gob.Register(models.Reservation{})
 
 	// change to true when in production
 	app.InProduction = false
@@ -34,6 +54,7 @@ func main() {
 	tc, err := render.CreateTemplateCache()
 	if err != nil {
 		log.Fatal("Error creating template cache!")
+		return err
 	}
 
 	app.TemplateCache = tc
@@ -42,14 +63,5 @@ func main() {
 	repo := handlers.NewRepo(&app)
 	handlers.NewHandlers(repo)
 	render.NewTemplates(&app)
-
-	fmt.Printf("Starting application on port %s\n", portNumber)
-
-	srv := &http.Server{
-		Addr:    portNumber,
-		Handler: routes(&app),
-	}
-
-	err = srv.ListenAndServe()
-	log.Fatal(err)
+	return nil
 }
