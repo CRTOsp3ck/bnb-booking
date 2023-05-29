@@ -1,0 +1,22 @@
+mode: set
+bnb-booking/internal/handlers/handlers.go:22.47,26.2 1 1
+bnb-booking/internal/handlers/handlers.go:29.33,31.2 1 1
+bnb-booking/internal/handlers/handlers.go:34.67,36.2 1 1
+bnb-booking/internal/handlers/handlers.go:39.68,51.2 5 1
+bnb-booking/internal/handlers/handlers.go:54.71,56.2 1 1
+bnb-booking/internal/handlers/handlers.go:59.69,61.2 1 1
+bnb-booking/internal/handlers/handlers.go:64.74,73.2 4 1
+bnb-booking/internal/handlers/handlers.go:76.78,78.16 2 1
+bnb-booking/internal/handlers/handlers.go:78.16,81.3 2 0
+bnb-booking/internal/handlers/handlers.go:83.2,97.19 6 1
+bnb-booking/internal/handlers/handlers.go:97.19,106.3 4 0
+bnb-booking/internal/handlers/handlers.go:108.2,110.66 2 1
+bnb-booking/internal/handlers/handlers.go:114.70,116.2 1 1
+bnb-booking/internal/handlers/handlers.go:119.75,121.2 1 1
+bnb-booking/internal/handlers/handlers.go:124.79,129.2 3 1
+bnb-booking/internal/handlers/handlers.go:137.79,144.16 3 1
+bnb-booking/internal/handlers/handlers.go:144.16,146.3 1 0
+bnb-booking/internal/handlers/handlers.go:148.2,149.14 2 1
+bnb-booking/internal/handlers/handlers.go:152.81,155.9 2 1
+bnb-booking/internal/handlers/handlers.go:155.9,160.3 4 1
+bnb-booking/internal/handlers/handlers.go:162.2,169.4 4 0

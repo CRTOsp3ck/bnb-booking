@@ -63,7 +63,7 @@ func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, td *mod
 	// render template
 	_, err = buf.WriteTo(w)
 	if err != nil {
-		log.Println(err)
+		log.Println("Error writing template to browser", err)
 		return err
 	}
 
