@@ -2,7 +2,7 @@ package models
 
 import "bnb-booking/internal/forms"
 
-// holds data sent from handlers to templatesg
+// TemplateData holds data sent from handlers to templates
 type TemplateData struct {
 	StringMap map[string]string
 	IntMap    map[string]int
