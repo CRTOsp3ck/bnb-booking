@@ -10,6 +10,8 @@ import (
 	"bnb-booking/internal/repository"
 	"bnb-booking/internal/repository/dbrepo"
 	"encoding/json"
+	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -198,6 +200,35 @@ func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
+
+	// Send notification - guest
+	htmlMsg := fmt.Sprintf(`
+		<strong>Reservation Confirmation</strong><br>
+		Dear %s, <br>
+		This is to confirm your reservation from %s to %s.
+	`, reservation.FirstName, reservation.StartDate.Format("2006-01-02"), reservation.EndDate.Format("2006-01-02"))
+	msg := models.MailData{
+		To:      reservation.Email,
+		From:    "me@here.com",
+		Subject: "Reservation Confirmation",
+		Content: htmlMsg,
+	}
+
+	m.App.MailChan <- msg
+
+	// Send notification - property owner
+	htmlMsg = fmt.Sprintf(`
+		<strong>Reservation Notification</strong><br>
+		A reservation has been made for room %s from %s to %s.
+	`, reservation.Room.RoomName, reservation.StartDate.Format("2006-01-02"), reservation.EndDate.Format("2006-01-02"))
+	msg = models.MailData{
+		To:      "me@here.com",
+		From:    "me@here.com",
+		Subject: "Reservation Notification",
+		Content: htmlMsg,
+	}
+
+	m.App.MailChan <- msg
 
 	m.App.Session.Put(r.Context(), "reservation", reservation)
 
@@ -401,4 +432,62 @@ func (m *Repository) BookRoom(w http.ResponseWriter, r *http.Request) {
 	m.App.Session.Put(r.Context(), "reservation", res)
 
 	http.Redirect(w, r, "/make-reservation", http.StatusSeeOther)
+}
+
+// ShowLogin shows login page
+func (m *Repository) ShowLogin(w http.ResponseWriter, r *http.Request) {
+	render.Template(w, r, "login.page.tmpl", &models.TemplateData{
+		Form: forms.New(nil),
+	})
+}
+
+// PostShowLogin handles logging in user
+func (m *Repository) PostShowLogin(w http.ResponseWriter, r *http.Request) {
+	// to prevent session fixation attack
+	_ = m.App.Session.RenewToken(r.Context())
+
+	err := r.ParseForm()
+	if err != nil {
+		log.Println(err)
+	}
+
+	email := r.Form.Get("email")
+	password := r.Form.Get("password")
+
+	form := forms.New(r.PostForm)
+	form.Required("email", "password")
+	form.IsEmail("email")
+	if !form.Valid() {
+		// TODO - take user back to page
+		render.Template(w, r, "login.page.tmpl", &models.TemplateData{
+			Form: form,
+		})
+		return
+	}
+
+	id, _, err := m.DB.Authenticate(email, password)
+	if err != nil {
+		log.Println(err)
+
+		m.App.Session.Put(r.Context(), "error", "Invalid login credentials")
+		http.Redirect(w, r, "/user/login", http.StatusSeeOther)
+		return
+	}
+
+	m.App.Session.Put(r.Context(), "user_id", id)
+	m.App.Session.Put(r.Context(), "flash", "Logged in successfully")
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+// Logout logs a user out
+func (m *Repository) Logout(w http.ResponseWriter, r *http.Request) {
+	_ = m.App.Session.Destroy(r.Context())
+	_ = m.App.Session.RenewToken(r.Context())
+
+	http.Redirect(w, r, "/user/login", http.StatusSeeOther)
+}
+
+// AdminDashboard
+func (m *Repository) AdminDashboard(w http.ResponseWriter, r *http.Request) {
+	render.Template(w, r, "admin-dashboard.page.tmpl", &models.TemplateData{})
 }

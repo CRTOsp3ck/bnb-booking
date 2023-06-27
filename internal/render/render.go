@@ -6,11 +6,12 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/justinas/nosurf"
 	"html/template"
 	"log"
 	"net/http"
 	"path/filepath"
+
+	"github.com/justinas/nosurf"
 )
 
 var functions = template.FuncMap{}
@@ -29,6 +30,9 @@ func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateDa
 	td.Error = app.Session.PopString(r.Context(), "error")
 	td.Warning = app.Session.PopString(r.Context(), "warning")
 	td.CSRFToken = nosurf.Token(r)
+	if app.Session.Exists(r.Context(), "user_id") {
+		td.IsAuthenticated = 1
+	}
 	return td
 }
 
